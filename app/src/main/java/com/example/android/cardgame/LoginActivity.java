@@ -77,12 +77,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void searchForAnOpenGame(){
-        final Intent twoPlayerGame = new Intent(LoginActivity.this, BluetoothActivity.class);
+        final Intent twoPlayerGame = new Intent(LoginActivity.this, TwoPlayerBlackjackActivity.class);
+        twoPlayerGame.putExtra("player_status", "Client");
         startActivity(twoPlayerGame);
     }
 
     private void hostANewGame() {
-        final Intent hostGame = new Intent(LoginActivity.this, HostMenuActivity.class);
+        final Intent hostGame = new Intent(LoginActivity.this, TwoPlayerBlackjackActivity.class);
+        hostGame.putExtra("player_status", "Host");
         startActivity(hostGame);
     }
 

@@ -94,16 +94,19 @@ public class HostMenuActivity extends AppCompatActivity {
     Button sendButton;
 
     private void startMultiplayer() {
-        setContentView(R.layout.host_button_test);
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
 
-        sendButton = findViewById(R.id.send_button);
-        readButton = findViewById(R.id.read_button);
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bluetoothGameService.writeString("Greetings guest!");
-            }
-        });
+//        setContentView(R.layout.host_button_test);
+//
+//        sendButton = findViewById(R.id.send_button);
+//        readButton = findViewById(R.id.read_button);
+//
+//        sendButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                bluetoothGameService.writeString("Greetings guest!");
+//            }
+//        });
     }
 }

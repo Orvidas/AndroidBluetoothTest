@@ -41,10 +41,6 @@ class BluetoothGameService {
     public static final int STATE_CONNECTING = 2; //Exclusive to client thread
     public static final int STATE_CONNECTED = 3;
 
-    //private static final int MESSAGE_READ = 0;
-    //private static final int MESSAGE_WRITE = 1;
-    //private static final int MESSAGE_TOAST = 2;
-
     BluetoothGameService(Handler handler) {
         currentState = STATE_NONE;
         gameHandler = handler;
@@ -141,10 +137,7 @@ class BluetoothGameService {
         currentState = STATE_NONE;
     }
 
-    boolean isConnected(){
-        return (currentState == STATE_CONNECTED);
-    }
-
+    //Uses bluetoothAdapter, currentState, and establishConnection method.
     private class HostThread extends Thread {
         private final BluetoothServerSocket serverSocket;
 
@@ -191,13 +184,12 @@ class BluetoothGameService {
             }
         }
     }
-
+    //uses currentState, bluetoothAdapter, connectionFailed method, and establishConnection method.
     private class ClientThread extends Thread {
         private final BluetoothDevice bluetoothDevice;
         private BluetoothSocket tempSocket = null;
 
         ClientThread(BluetoothDevice device){
-
             try {
                 tempSocket = device.createRfcommSocketToServiceRecord(mUUID);
             } catch (IOException e) {
@@ -234,7 +226,7 @@ class BluetoothGameService {
             }
         }
     }
-
+    //closeIndividualThreads, gameHandler, currentState, and gameHandler method
     private class ConnectedThread extends Thread{
         private BluetoothSocket mBluetoothSocket;
         private final InputStream mInputStream;

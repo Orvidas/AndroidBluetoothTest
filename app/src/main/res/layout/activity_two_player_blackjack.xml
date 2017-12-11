@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!--tools:context="com.example.android.cardgame.TwoPlayerBlackjackActivity"-->
+    android:orientation="vertical"
+    tools:context="com.example.android.cardgame.TwoPlayerBlackjackActivity">
+    <!---->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/dealer_score"
+            android:id="@+id/opponent_score"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -39,7 +40,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/dealer_layout"
+            android:id="@+id/opponent_layout"
             android:orientation="horizontal"
             android:background="@android:color/darker_gray">
 
@@ -47,7 +48,7 @@
     </HorizontalScrollView>
 
     <TextView
-        android:id="@+id/player_score"
+        android:id="@+id/current_player_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="6dp"
@@ -63,7 +64,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/player_layout"
+            android:id="@+id/current_player_layout"
             android:orientation="horizontal"
             android:background="@android:color/darker_gray">
 
@@ -77,21 +78,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/hit_me_button"
+            android:id="@+id/hit_player_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
             android:text="Hit Me" />
 
         <Button
-            android:id="@+id/reset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:text="Reset" />
-
-        <Button
-            android:id="@+id/stay_button"
+            android:id="@+id/stay_player_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"

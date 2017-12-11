@@ -8,6 +8,7 @@ package com.example.android.cardgame.deck;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -26,6 +27,12 @@ public class Deck {
         
         if(shuffleDeck)
             shuffleDeck();
+    }
+
+    public Deck(long seedForShuffle){
+        createDeck();
+
+        getSpecificDeck(new Random(seedForShuffle));
     }
     
     private void createDeck(){
@@ -104,5 +111,9 @@ public class Deck {
                 break;
         }
         return allCardsNotInDeck;
+    }
+
+    public void getSpecificDeck(Random random) {
+        Collections.shuffle(deck, random);
     }
 }
