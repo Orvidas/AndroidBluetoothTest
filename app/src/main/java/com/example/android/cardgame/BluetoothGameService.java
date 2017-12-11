@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -95,6 +96,14 @@ class BluetoothGameService {
 
         if (connectedThread != null) {
             connectedThread.write(msgByte);
+        }
+    }
+
+    void writeString(String message, int messageType){
+        byte[] msgByte = message.getBytes();
+
+        if(connectedThread != null) {
+            connectedThread.write(msgByte, messageType);
         }
     }
 
@@ -279,6 +288,22 @@ class BluetoothGameService {
                 mOutputStream.write(bytes);
 
                 gameHandler.obtainMessage(MESSAGE_WRITE, -1, -1, bytes).sendToTarget();
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when sending data", e);
+
+                Message writeErrorMessage = gameHandler.obtainMessage(MESSAGE_TOAST);
+                Bundle bundle = new Bundle();
+                bundle.putString("toast", "Couldn't send data to the other device");
+                writeErrorMessage.setData(bundle);
+                gameHandler.sendMessage(writeErrorMessage);
+            }
+        }
+
+        void write(byte[] bytes, int messageType) {
+            try{
+                mOutputStream.write(bytes);
+
+                gameHandler.obtainMessage(messageType, -1, -1, bytes).sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Error occurred when sending data", e);
 
