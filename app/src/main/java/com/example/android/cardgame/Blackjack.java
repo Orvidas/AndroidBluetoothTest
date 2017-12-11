@@ -22,6 +22,28 @@ public class Blackjack {
         for (int i = 0; i < numOfPlayers; i++) {
             players[i] = i < names.length ? new Player(names[i]) : new Player("Player " + i);
         }
+        
+        distributeInitialCards();
+    }
+
+    private void distributeInitialCards() {
+        for (Player player : players) {
+            player.addCardToHand(deck.drawCard());
+            player.addCardToHand(deck.drawCard());
+        }
+        dealer.addCardToHand(deck.drawCard());
+        dealer.addCardToHand(deck.drawCard());
+    }
+
+    public void resetGame(){
+        deck = new Deck(true);
+        currentPlayerIndex = 0;
+        for (Player player : players) {
+            player.clearHand();
+        }
+        dealer.clearHand();
+
+        distributeInitialCards();
     }
 
     public int getCurrentPlayerIndex() {
@@ -37,7 +59,10 @@ public class Blackjack {
     }
 
     public void hitCurrentPlayer() {
-        players[currentPlayerIndex].addCardToHand(deck.drawCard());
+        if(isDealerTurn())
+            dealer.addCardToHand(deck.drawCard());
+        else
+            players[currentPlayerIndex].addCardToHand(deck.drawCard());
     }
 
     public Player[] getPlayers() {
@@ -45,6 +70,10 @@ public class Blackjack {
     }
 
     public Player getCurrentPlayer() {
-        return players[currentPlayerIndex];
+        return isDealerTurn() ? dealer : players[currentPlayerIndex];
+    }
+
+    public Player getDealer() {
+        return dealer;
     }
 }

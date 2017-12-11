@@ -15,26 +15,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.android.cardgame.deck.Card;
-import com.example.android.cardgame.deck.Deck;
-import com.example.android.cardgame.deck.Rank;
-import com.example.android.cardgame.deck.Suit;
+import com.example.android.cardgame.deck.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    Deck deck = new Deck(true);
+    Blackjack blackjack;
+
+    Button hitMeButton;
+    Button stayButton;
+    Button resetButton;
+
     LinearLayout dealerLayout;
     LinearLayout playerLayout;
 
-    List<Card> dealerHand = new ArrayList<>();
-    List<Card> playerHand = new ArrayList<>();
-
     int dealerScore;
     int playerScore;
-
-    boolean dealersTurn = false;
 
     final int[][] allDrawableCards = new int[][] {
             //clubs
@@ -52,101 +48,62 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        hitMeButton = findViewById(R.id.hit_me_button);
+        stayButton = findViewById(R.id.stay_button);
+        resetButton = findViewById(R.id.reset_button);
+
+        setButtonFunctions();
+
         dealerLayout = findViewById(R.id.dealer_layout);
         playerLayout = findViewById(R.id.player_layout);
 
+        blackjack = new Blackjack(1, new String[]{"Player"});
         startGame();
     }
 
+    void setButtonFunctions(){
+        hitMeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hitMeButton();
+            }
+        });
+        stayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stayButton();
+            }
+        });
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetGame();
+            }
+        });
+    }
+
     void startGame(){
-        dealersTurn = false;
-        playerHand.add(deck.drawCard());
-        playerHand.add(deck.drawCard());
-
-        dealerHand.add(deck.drawCard());
-        dealerHand.add(deck.drawCard());
-
-        updateHandView(playerHand, playerLayout, false);
-        updateHandView(dealerHand, dealerLayout, true);
+        updateHandView(blackjack.getCurrentPlayer().getHand(), playerLayout, false);
+        updateHandView(blackjack.getDealer().getHand(), dealerLayout, true);
         updateScoreView();
     }
 
-    void resetGameClick(View view){
-        resetGame();
-    }
-
-    private void resetGame() {
-        deck.returnCards(playerHand.toArray(new Card[0]));
-        deck.returnCards(dealerHand.toArray(new Card[0]));
-        deck.shuffleDeck();
-
-        playerHand.clear();
-        dealerHand.clear();
-
+    void resetGame() {
+        blackjack.resetGame();
         recreate();
     }
 
     private void updateScoreView() {
-        playerScore = getScoreFromHand(playerHand);
-        dealerScore = getScoreFromHand(dealerHand);
+        playerScore = blackjack.getPlayers()[0].getScore(); //getScoreFromHand(playerHand);
+        dealerScore = blackjack.getDealer().getScore(); //getScoreFromHand(dealerHand);
 
         TextView playerScoreTextView = findViewById(R.id.player_score);
         TextView dealerScoreTextView = findViewById(R.id.dealer_score);
         playerScoreTextView.setText("Player Score = " + playerScore);
-        if(dealersTurn)
+        if(blackjack.isDealerTurn())
             dealerScoreTextView.setText("Dealer Score = " + dealerScore);
         else
             dealerScoreTextView.setText("Dealer Score = ?");
-    }
-
-    private int getScoreFromHand(List<Card> hand) {
-        int handScore = 0;
-        boolean isAceInHand = false;
-        for (Card card : hand){
-            switch (card.getRank()){
-                case A:
-                    if(!isAceInHand)
-                        isAceInHand = true;
-                    else
-                        handScore++;
-                    break;
-                case TWO:
-                    handScore += 2;
-                    break;
-                case THREE:
-                    handScore += 3;
-                    break;
-                case FOUR:
-                    handScore += 4;
-                    break;
-                case FIVE:
-                    handScore += 5;
-                    break;
-                case SIX:
-                    handScore += 6;
-                    break;
-                case SEVEN:
-                    handScore += 7;
-                    break;
-                case EIGHT:
-                    handScore += 8;
-                    break;
-                case NINE:
-                    handScore += 9;
-                    break;
-                case TEN:
-                case JACK:
-                case QUEEN:
-                case KING:
-                    handScore += 10;
-                    break;
-            }
-        }
-
-        if(isAceInHand)
-            handScore += (handScore + 11 <= 21) ? 11 : 1;
-
-        return handScore;
     }
 
     private int getDpAmount(int sizeOfHand, LinearLayout layout, ImageView image) {
@@ -202,9 +159,9 @@ public class MainActivity extends AppCompatActivity {
         return  getResources().getDrawable(allDrawableCards[x][y]);
     }
 
-    void addCardToPlayerHand(View view){
-        playerHand.add(deck.drawCard());
-        updateHandView(playerHand, playerLayout, false);
+    void hitMeButton() {
+        blackjack.hitCurrentPlayer();
+        updateHandView(blackjack.getCurrentPlayer().getHand(), playerLayout, false);
         updateScoreView();
 
         if(playerScore > 21) {
@@ -220,19 +177,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void stayButtonClicked(View view){
-        dealersTurn = true;
+    void stayButton(){
+        blackjack.endCurrentPlayerTurn();
         disableButtons();
-        updateHandView(dealerHand, dealerLayout, false);
+        updateHandView(blackjack.getCurrentPlayer().getHand(), dealerLayout, false);
         updateScoreView();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(dealerScore < 17){
-                    dealerHand.add(deck.drawCard());
-                    updateHandView(dealerHand, dealerLayout, false);
+                if(blackjack.getCurrentPlayer().getScore() < 17){
+                    blackjack.hitCurrentPlayer();
+                    updateHandView(blackjack.getCurrentPlayer().getHand(), dealerLayout, false);
                     updateScoreView();
                     handler.postDelayed(this, 1500);
                 }
@@ -247,10 +204,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableButtons() {
-        Button hitMeButton = (Button) findViewById(R.id.hit_me_button);
-        Button stayButton = (Button) findViewById(R.id.stay_button);
-        Button resetButton = (Button) findViewById(R.id.reset_button);
-
         hitMeButton.setEnabled(false);
         stayButton.setEnabled(false);
         resetButton.setEnabled(false);

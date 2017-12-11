@@ -47,7 +47,7 @@ public class BluetoothActivity extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
 
-        bluetoothGameService = new BluetoothGameService(mHandler);
+        bluetoothGameService = new BluetoothGameService(this, mHandler);
 
         queryPairedDevices();
     }

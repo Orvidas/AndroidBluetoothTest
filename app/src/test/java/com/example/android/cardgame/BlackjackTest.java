@@ -104,6 +104,6 @@ public class BlackjackTest {
         blackjack.hitCurrentPlayer();
         Player currentPlayer = blackjack.getCurrentPlayer();
 
-        assertEquals(1, currentPlayer.getHand().size());
+        assertEquals(3, currentPlayer.getHand().size());
     }
 }

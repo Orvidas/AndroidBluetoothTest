@@ -25,7 +25,7 @@ public class HostMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host_menu);
 
-        bluetoothGameService = new BluetoothGameService(mHandler);
+        bluetoothGameService = new BluetoothGameService(this, mHandler);
 
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 

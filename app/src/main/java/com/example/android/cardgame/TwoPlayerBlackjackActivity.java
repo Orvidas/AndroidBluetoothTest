@@ -45,7 +45,7 @@ public class TwoPlayerBlackjackActivity extends AppCompatActivity {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
 
-        gameService = new BluetoothGameService(gameHandler);
+        gameService = new BluetoothGameService(this, gameHandler);
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {

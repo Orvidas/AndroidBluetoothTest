@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +15,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import static com.example.android.cardgame.MessageConstants.*;
+import static com.example.android.cardgame.MessageConstants.MESSAGE_READ;
+import static com.example.android.cardgame.MessageConstants.MESSAGE_TOAST;
+import static com.example.android.cardgame.MessageConstants.MESSAGE_WRITE;
 
 /**
  * Created by Work on 11/25/2017.
@@ -42,7 +44,7 @@ class BluetoothGameService {
     public static final int STATE_CONNECTING = 2; //Exclusive to client thread
     public static final int STATE_CONNECTED = 3;
 
-    BluetoothGameService(Handler handler) {
+    BluetoothGameService(Context context, Handler handler) {
         currentState = STATE_NONE;
         gameHandler = handler;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
